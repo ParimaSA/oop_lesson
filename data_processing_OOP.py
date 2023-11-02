@@ -104,3 +104,22 @@ my_table2 = my_DB.search('countries')
 my_table3 = my_table1.join(my_table2, 'country')
 my_table3_filtered = my_table3.filter(lambda x: x['EU'] == 'no').filter(lambda x: float(x['temperature']) < 5.0)
 print(my_table3_filtered.table)
+
+print()
+filtered_EU_coastline = my_table3.filter(lambda x: x['EU'] == 'yes').filter(lambda x: x['coastline'] == 'no')
+print(my_table3_filtered)
+print('Min temp:', filtered_EU_coastline.aggregate(lambda x: min(x), 'temperature'))
+print('Max temp:', filtered_EU_coastline.aggregate(lambda x: max(x), 'temperature'))
+
+print()
+country_list = [x['country'] for x in countries]
+c_list = [x['country'] for x in cities]
+country_list = [x for x in country_list if x in c_list]
+# print(country_list)
+# print(countries_list)
+print('Min latitude:', my_table3.aggregate(lambda x: min(x), 'latitude'))
+print('Max latitude:', my_table3.aggregate(lambda x: max(x), 'latitude'))
+print('\ncountry : (min/max)')
+for i in country_list:
+    country = my_table3.filter(lambda x: x['country'] == i)
+    print(i, ':', country.aggregate(lambda x: min(x), 'latitude'),'/', country.aggregate(lambda x: max(x), 'latitude'))
